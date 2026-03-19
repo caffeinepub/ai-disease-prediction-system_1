@@ -3,51 +3,58 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: "Plus Jakarta Sans";
-  src: url("/assets/fonts/PlusJakartaSans.woff2") format("woff2");
+  font-family: "Bricolage Grotesque";
+  src: url("/assets/fonts/BricolageGrotesque.woff2") format("woff2");
+  font-weight: 200 800;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/assets/fonts/Satoshi.woff2") format("woff2");
   font-weight: 300 700;
   font-display: swap;
 }
 
 @layer base {
   :root {
-    --radius: 0.875rem;
-    /* Medical blue palette – extracted from design description */
-    --background: 0.965 0.012 220;
-    --foreground: 0.14 0.02 254;
-    --card: 1 0 0;
-    --card-foreground: 0.14 0.02 254;
-    --popover: 1 0 0;
-    --popover-foreground: 0.14 0.02 254;
-    /* Primary: steel/medical blue #3E6F9B */
-    --primary: 0.48 0.09 240;
-    --primary-foreground: 0.99 0 0;
-    /* Secondary lighter blue #4E86B5 */
-    --secondary: 0.94 0.04 222;
-    --secondary-foreground: 0.41 0.02 254;
-    --muted: 0.94 0.03 222;
-    --muted-foreground: 0.5 0.02 254;
-    --accent: 0.88 0.05 222;
-    --accent-foreground: 0.48 0.09 240;
-    /* Destructive: red risk #DC2626 */
-    --destructive: 0.53 0.22 28;
-    --destructive-foreground: 0.985 0 0;
-    --border: 0.9 0.02 220;
-    --input: 0.9 0.02 220;
-    --ring: 0.48 0.09 240;
-    --chart-1: 0.48 0.09 240;
-    --chart-2: 0.55 0.1 238;
-    --chart-3: 0.65 0.15 160;
-    --chart-4: 0.7 0.18 55;
-    --chart-5: 0.53 0.22 28;
-    --sidebar: 0.965 0.012 220;
-    --sidebar-foreground: 0.14 0.02 254;
-    --sidebar-primary: 0.48 0.09 240;
-    --sidebar-primary-foreground: 0.99 0 0;
-    --sidebar-accent: 0.94 0.04 222;
-    --sidebar-accent-foreground: 0.41 0.02 254;
-    --sidebar-border: 0.9 0.02 220;
-    --sidebar-ring: 0.48 0.09 240;
+    --radius: 0.75rem;
+    /* ─── Dark Cyberpunk / Futuristic Medical ─── */
+    --background: 0.1 0.025 220;
+    --foreground: 0.93 0.01 210;
+    --card: 0.13 0.03 215;
+    --card-foreground: 0.93 0.01 210;
+    --popover: 0.13 0.03 215;
+    --popover-foreground: 0.93 0.01 210;
+    /* Primary: neon cyan/teal */
+    --primary: 0.82 0.18 195;
+    --primary-foreground: 0.08 0.02 220;
+    /* Secondary: electric purple */
+    --secondary: 0.72 0.22 290;
+    --secondary-foreground: 0.95 0.01 210;
+    --muted: 0.18 0.03 218;
+    --muted-foreground: 0.6 0.04 215;
+    --accent: 0.25 0.06 215;
+    --accent-foreground: 0.82 0.18 195;
+    /* Destructive: hot coral/red */
+    --destructive: 0.65 0.22 25;
+    --destructive-foreground: 0.97 0 0;
+    --border: 0.28 0.06 210;
+    --input: 0.22 0.04 215;
+    --ring: 0.82 0.18 195;
+    --chart-1: 0.82 0.18 195;
+    --chart-2: 0.72 0.22 290;
+    --chart-3: 0.75 0.18 155;
+    --chart-4: 0.78 0.16 55;
+    --chart-5: 0.65 0.22 25;
+    --sidebar: 0.1 0.025 220;
+    --sidebar-foreground: 0.93 0.01 210;
+    --sidebar-primary: 0.82 0.18 195;
+    --sidebar-primary-foreground: 0.08 0.02 220;
+    --sidebar-accent: 0.18 0.03 218;
+    --sidebar-accent-foreground: 0.82 0.18 195;
+    --sidebar-border: 0.28 0.06 210;
+    --sidebar-ring: 0.82 0.18 195;
   }
 
   * {
@@ -58,36 +65,160 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+    font-family: "Satoshi", system-ui, sans-serif;
+    position: relative;
+  }
+  /* Dot-grid background pattern */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(
+      circle,
+      oklch(0.82 0.18 195 / 0.06) 1px,
+      transparent 1px
+    );
+    background-size: 32px 32px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  body > * {
+    position: relative;
+    z-index: 1;
   }
 }
 
 @layer utilities {
-  .hero-gradient {
+  /* Gradient heading text */
+  .gradient-heading {
     background: linear-gradient(
       135deg,
-      oklch(0.94 0.04 222) 0%,
-      oklch(0.9 0.05 230) 100%
+      oklch(0.82 0.18 195) 0%,
+      oklch(0.72 0.22 290) 100%
     );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
   .section-label {
     @apply text-xs font-bold uppercase tracking-widest;
-    color: oklch(0.48 0.09 240);
+    color: oklch(0.82 0.18 195);
+    letter-spacing: 0.15em;
   }
+  /* Neon glow card border */
+  .neon-card {
+    border: 1px solid oklch(0.82 0.18 195 / 0.25);
+    box-shadow: 0 0 0 1px oklch(0.82 0.18 195 / 0.08), 0 0 24px
+      oklch(0.82 0.18 195 / 0.08), inset 0 1px 0 oklch(0.82 0.18 195 / 0.1);
+  }
+  .neon-card:hover {
+    border-color: oklch(0.82 0.18 195 / 0.45);
+    box-shadow: 0 0 0 1px oklch(0.82 0.18 195 / 0.15), 0 0 40px
+      oklch(0.82 0.18 195 / 0.15), inset 0 1px 0 oklch(0.82 0.18 195 / 0.15);
+  }
+  .neon-card-purple {
+    border: 1px solid oklch(0.72 0.22 290 / 0.25);
+    box-shadow: 0 0 0 1px oklch(0.72 0.22 290 / 0.08), 0 0 24px
+      oklch(0.72 0.22 290 / 0.08), inset 0 1px 0 oklch(0.72 0.22 290 / 0.1);
+  }
+  /* Risk badge utilities */
   .risk-critical {
-    background: oklch(0.53 0.22 28);
-    color: #fff;
+    background: oklch(0.65 0.22 25 / 0.2);
+    color: oklch(0.82 0.18 25);
+    border: 1px solid oklch(0.65 0.22 25 / 0.5);
+    box-shadow: 0 0 10px oklch(0.65 0.22 25 / 0.3);
   }
   .risk-high {
-    background: oklch(0.62 0.18 45);
-    color: #fff;
+    background: oklch(0.72 0.18 45 / 0.2);
+    color: oklch(0.85 0.14 55);
+    border: 1px solid oklch(0.72 0.18 45 / 0.5);
+    box-shadow: 0 0 10px oklch(0.72 0.18 45 / 0.3);
   }
   .risk-medium {
-    background: oklch(0.72 0.16 75);
-    color: #1a1a1a;
+    background: oklch(0.78 0.14 75 / 0.2);
+    color: oklch(0.88 0.12 80);
+    border: 1px solid oklch(0.78 0.14 75 / 0.5);
   }
   .risk-low {
-    background: oklch(0.58 0.14 155);
-    color: #fff;
+    background: oklch(0.75 0.18 155 / 0.2);
+    color: oklch(0.85 0.15 155);
+    border: 1px solid oklch(0.75 0.18 155 / 0.5);
   }
+  /* Glowing neon connector line */
+  .neon-line {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      oklch(0.82 0.18 195 / 0.5),
+      oklch(0.72 0.22 290 / 0.5),
+      transparent
+    );
+    box-shadow: 0 0 8px oklch(0.82 0.18 195 / 0.4);
+  }
+  /* Scanline overlay effect for hero */
+  .scanlines::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      oklch(0 0 0 / 0.03) 2px,
+      oklch(0 0 0 / 0.03) 4px
+    );
+    pointer-events: none;
+    border-radius: inherit;
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 10px oklch(0.82 0.18 195 / 0.4), 0 0 30px
+      oklch(0.82 0.18 195 / 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px oklch(0.82 0.18 195 / 0.7), 0 0 60px
+      oklch(0.82 0.18 195 / 0.35), 0 0 90px oklch(0.82 0.18 195 / 0.15);
+  }
+}
+
+@keyframes flicker {
+  0%,
+  95%,
+  100% {
+    opacity: 1;
+  }
+  96% {
+    opacity: 0.85;
+  }
+  97% {
+    opacity: 1;
+  }
+  98% {
+    opacity: 0.9;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-flicker {
+  animation: flicker 6s ease-in-out infinite;
 }

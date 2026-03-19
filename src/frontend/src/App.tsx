@@ -30,6 +30,7 @@ import {
   ShieldPlus,
   Stethoscope,
   X,
+  Zap,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
@@ -471,17 +472,6 @@ function riskClass(risk: RiskLevel) {
   }
 }
 
-function riskColor(risk: RiskLevel) {
-  switch (risk) {
-    case "Critical":
-      return "destructive";
-    case "High":
-      return "default";
-    default:
-      return "secondary";
-  }
-}
-
 // ── Nav Link ─────────────────────────────────────────────────────────────────
 function NavLink({
   href,
@@ -490,10 +480,11 @@ function NavLink({
   return (
     <a
       href={href}
-      className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors"
+      className="text-sm font-medium text-foreground/60 hover:text-primary transition-colors duration-200 relative group"
       data-ocid={"nav.link"}
     >
       {children}
+      <span className="absolute -bottom-1 left-0 w-0 h-px bg-primary group-hover:w-full transition-all duration-300" />
     </a>
   );
 }
@@ -511,13 +502,25 @@ function Navbar() {
     { href: "#contact", label: "Team" },
   ];
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-border shadow-xs">
+    <header
+      className="sticky top-0 z-50 backdrop-blur-xl bg-background/80 border-b border-primary/20"
+      style={{
+        boxShadow:
+          "0 1px 0 oklch(0.82 0.18 195 / 0.15), 0 4px 24px oklch(0 0 0 / 0.4)",
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
         <a
           href="#home"
-          className="flex items-center gap-2 font-bold text-lg text-primary"
+          className="flex items-center gap-2 font-display font-bold text-lg text-primary"
+          style={{ textShadow: "0 0 20px oklch(0.82 0.18 195 / 0.5)" }}
         >
-          <ShieldPlus className="w-6 h-6" />
+          <ShieldPlus
+            className="w-6 h-6"
+            style={{
+              filter: "drop-shadow(0 0 8px oklch(0.82 0.18 195 / 0.7))",
+            }}
+          />
           <span className="hidden sm:inline">AI Disease Prediction</span>
           <span className="sm:hidden">HealthAI</span>
         </a>
@@ -530,14 +533,19 @@ function Navbar() {
           ))}
         </nav>
         <div className="hidden lg:flex">
-          <Button asChild size="sm" data-ocid="nav.primary_button">
+          <Button
+            asChild
+            size="sm"
+            className="animate-pulse-glow font-display font-semibold"
+            data-ocid="nav.primary_button"
+          >
             <a href="#checker">Start Assessment</a>
           </Button>
         </div>
         {/* Mobile */}
         <button
           type="button"
-          className="lg:hidden p-2 rounded-md text-foreground"
+          className="lg:hidden p-2 rounded-md text-primary border border-primary/30 hover:border-primary/60 transition-colors"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
           data-ocid="nav.toggle"
@@ -551,7 +559,7 @@ function Navbar() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="lg:hidden overflow-hidden bg-white border-t border-border"
+            className="lg:hidden overflow-hidden bg-background/95 border-t border-primary/20"
           >
             <nav className="flex flex-col px-4 py-3 gap-2">
               {links.map((l) => (
@@ -559,7 +567,7 @@ function Navbar() {
                   key={l.href}
                   href={l.href}
                   onClick={() => setOpen(false)}
-                  className="py-2 text-sm font-medium text-foreground/70 hover:text-primary"
+                  className="py-2 text-sm font-medium text-foreground/70 hover:text-primary transition-colors"
                 >
                   {l.label}
                 </a>
@@ -585,8 +593,43 @@ function Navbar() {
 // ── Hero ─────────────────────────────────────────────────────────────────────
 function Hero() {
   return (
-    <section id="home" className="hero-gradient">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-20 lg:py-28 grid lg:grid-cols-2 gap-12 items-center">
+    <section
+      id="home"
+      className="relative overflow-hidden"
+      style={{
+        background:
+          "linear-gradient(135deg, oklch(0.08 0.03 220) 0%, oklch(0.12 0.05 210) 50%, oklch(0.09 0.04 270) 100%)",
+        minHeight: "88vh",
+      }}
+    >
+      {/* Animated hex grid overlay */}
+      <div
+        className="absolute inset-0 opacity-20"
+        style={{
+          backgroundImage:
+            "linear-gradient(oklch(0.82 0.18 195 / 0.15) 1px, transparent 1px), linear-gradient(90deg, oklch(0.82 0.18 195 / 0.15) 1px, transparent 1px)",
+          backgroundSize: "60px 60px",
+        }}
+      />
+      {/* Corner glow effects */}
+      <div
+        className="absolute top-0 left-1/4 w-96 h-96 rounded-full pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(circle, oklch(0.82 0.18 195 / 0.12) 0%, transparent 70%)",
+          transform: "translateY(-30%)",
+        }}
+      />
+      <div
+        className="absolute bottom-0 right-1/4 w-80 h-80 rounded-full pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(circle, oklch(0.72 0.22 290 / 0.1) 0%, transparent 70%)",
+          transform: "translateY(30%)",
+        }}
+      />
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-20 lg:py-28 grid lg:grid-cols-2 gap-12 items-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -595,9 +638,14 @@ function Hero() {
           <span className="section-label mb-3 block">
             Science Fair Project 2026
           </span>
-          <h1 className="text-4xl sm:text-5xl font-bold leading-tight text-foreground mb-5">
-            Predicting Disease with the{" "}
-            <span className="text-primary">Power of AI</span>
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-5">
+            Predicting Disease <br />
+            <span
+              className="gradient-heading animate-flicker"
+              style={{ display: "inline-block" }}
+            >
+              with the Power of AI
+            </span>
           </h1>
           <p className="text-base text-muted-foreground leading-relaxed mb-8 max-w-lg">
             An educational demonstration of how machine learning and decision
@@ -606,13 +654,22 @@ function Hero() {
             tool.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Button asChild size="lg" data-ocid="hero.primary_button">
-              <a href="#checker">Try Symptom Checker</a>
+            <Button
+              asChild
+              size="lg"
+              className="font-display font-semibold animate-pulse-glow"
+              data-ocid="hero.primary_button"
+            >
+              <a href="#checker">
+                <Zap className="w-4 h-4 mr-2" />
+                Try Symptom Checker
+              </a>
             </Button>
             <Button
               asChild
               variant="outline"
               size="lg"
+              className="font-display border-primary/30 text-primary hover:bg-primary/10 hover:border-primary/60"
               data-ocid="hero.secondary_button"
             >
               <a href="#about">Learn More</a>
@@ -621,12 +678,16 @@ function Hero() {
           <div className="mt-8 flex flex-wrap gap-4">
             {[
               "8 Diseases Modeled",
-              "15 Symptom Inputs",
+              "39 Symptom Inputs",
               "Decision Tree AI",
             ].map((tag) => (
               <span
                 key={tag}
-                className="flex items-center gap-1.5 text-xs font-medium text-primary bg-primary/10 px-3 py-1.5 rounded-full"
+                className="flex items-center gap-1.5 text-xs font-medium text-primary px-3 py-1.5 rounded-full"
+                style={{
+                  background: "oklch(0.82 0.18 195 / 0.1)",
+                  border: "1px solid oklch(0.82 0.18 195 / 0.25)",
+                }}
               >
                 <ShieldCheck className="w-3.5 h-3.5" />
                 {tag}
@@ -634,46 +695,86 @@ function Hero() {
             ))}
           </div>
         </motion.div>
+
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="flex justify-center"
+          className="flex justify-center animate-float"
         >
           <div className="relative w-full max-w-sm">
-            {/* Accent shape */}
-            <div className="absolute inset-0 bg-primary/10 rounded-[40px] rotate-3" />
-            <div className="relative bg-white rounded-[32px] shadow-card p-6 space-y-4">
-              <div className="flex items-center gap-3 pb-2 border-b border-border">
-                <div className="bg-primary/10 rounded-xl p-2">
-                  <Brain className="w-6 h-6 text-primary" />
+            {/* Glow backdrop */}
+            <div
+              className="absolute inset-0 rounded-3xl"
+              style={{
+                background:
+                  "radial-gradient(circle at center, oklch(0.82 0.18 195 / 0.15) 0%, transparent 70%)",
+                filter: "blur(20px)",
+                transform: "scale(1.2)",
+              }}
+            />
+            <div
+              className="relative rounded-2xl p-6 space-y-4 neon-card"
+              style={{ background: "oklch(0.11 0.03 215)" }}
+            >
+              <div className="flex items-center gap-3 pb-3 border-b border-primary/20">
+                <div
+                  className="rounded-xl p-2"
+                  style={{ background: "oklch(0.82 0.18 195 / 0.15)" }}
+                >
+                  <Brain
+                    className="w-6 h-6 text-primary"
+                    style={{
+                      filter: "drop-shadow(0 0 8px oklch(0.82 0.18 195 / 0.8))",
+                    }}
+                  />
                 </div>
                 <div>
-                  <div className="font-semibold text-sm">
+                  <div className="font-display font-semibold text-sm text-foreground">
                     AI Analysis Dashboard
                   </div>
                   <div className="text-xs text-muted-foreground">
                     Decision Tree Model
                   </div>
                 </div>
+                <div className="ml-auto flex items-center gap-1">
+                  <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                  <span className="text-[10px] text-primary font-mono">
+                    LIVE
+                  </span>
+                </div>
               </div>
               {[
-                { label: "Lung Cancer", pct: 82, risk: "Critical" },
-                { label: "Heart Disease", pct: 67, risk: "High" },
-                { label: "Lymphoma", pct: 44, risk: "High" },
+                {
+                  label: "Lung Cancer",
+                  pct: 82,
+                  risk: "Critical" as RiskLevel,
+                },
+                { label: "Heart Disease", pct: 67, risk: "High" as RiskLevel },
+                { label: "Lymphoma", pct: 44, risk: "High" as RiskLevel },
               ].map((item) => (
                 <div key={item.label}>
-                  <div className="flex justify-between text-xs mb-1">
-                    <span className="font-medium">{item.label}</span>
+                  <div className="flex justify-between text-xs mb-1.5">
+                    <span className="font-medium text-foreground/90">
+                      {item.label}
+                    </span>
                     <span
-                      className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${riskClass(item.risk as RiskLevel)}`}
+                      className={`px-2 py-0.5 rounded text-[10px] font-bold ${riskClass(item.risk)}`}
                     >
                       {item.pct}%
                     </span>
                   </div>
-                  <div className="h-1.5 bg-border rounded-full overflow-hidden">
+                  <div
+                    className="h-1.5 rounded-full overflow-hidden"
+                    style={{ background: "oklch(0.82 0.18 195 / 0.1)" }}
+                  >
                     <motion.div
-                      className="h-full bg-primary rounded-full"
+                      className="h-full rounded-full"
+                      style={{
+                        background:
+                          "linear-gradient(90deg, oklch(0.82 0.18 195), oklch(0.72 0.22 290))",
+                        boxShadow: "0 0 8px oklch(0.82 0.18 195 / 0.6)",
+                      }}
                       initial={{ width: 0 }}
                       animate={{ width: `${item.pct}%` }}
                       transition={{
@@ -684,7 +785,7 @@ function Hero() {
                   </div>
                 </div>
               ))}
-              <div className="pt-2 border-t border-border flex items-center gap-2 text-xs text-muted-foreground">
+              <div className="pt-2 border-t border-primary/10 flex items-center gap-2 text-xs text-muted-foreground">
                 <AlertTriangle className="w-3.5 h-3.5 text-destructive" />
                 Educational demo — not a medical diagnosis
               </div>
@@ -699,28 +800,53 @@ function Hero() {
 // ── About ────────────────────────────────────────────────────────────────────
 function About() {
   return (
-    <section id="about" className="py-20 bg-white">
+    <section
+      id="about"
+      className="py-20"
+      style={{ background: "oklch(0.11 0.025 218)" }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-12">
           <span className="section-label mb-2 block">About This Project</span>
-          <h2 className="text-3xl font-bold">
+          <h2 className="font-display text-3xl font-bold gradient-heading">
             Understanding AI Disease Prediction
           </h2>
         </div>
         <div className="grid md:grid-cols-3 gap-6">
           {[
             {
-              icon: <Brain className="w-8 h-8 text-primary" />,
+              icon: (
+                <Brain
+                  className="w-8 h-8 text-primary"
+                  style={{
+                    filter: "drop-shadow(0 0 6px oklch(0.82 0.18 195 / 0.7))",
+                  }}
+                />
+              ),
               title: "Educational Purpose",
               body: "This science fair project demonstrates how artificial intelligence can be applied to healthcare data. It is strictly educational and should never replace professional medical diagnosis or advice.",
             },
             {
-              icon: <GitBranch className="w-8 h-8 text-primary" />,
+              icon: (
+                <GitBranch
+                  className="w-8 h-8 text-primary"
+                  style={{
+                    filter: "drop-shadow(0 0 6px oklch(0.82 0.18 195 / 0.7))",
+                  }}
+                />
+              ),
               title: "Machine Learning Approach",
               body: "The system uses Decision Tree algorithms — a supervised learning method that makes predictions by asking a series of yes/no questions about symptoms to arrive at a probable condition.",
             },
             {
-              icon: <Database className="w-8 h-8 text-primary" />,
+              icon: (
+                <Database
+                  className="w-8 h-8 text-primary"
+                  style={{
+                    filter: "drop-shadow(0 0 6px oklch(0.82 0.18 195 / 0.7))",
+                  }}
+                />
+              ),
               title: "Dataset & Training",
               body: "The model was conceptually trained on symptom-disease datasets sourced from medical literature, correlating symptom patterns with diagnoses across 8 major disease categories.",
             },
@@ -732,12 +858,20 @@ function About() {
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              <Card className="h-full rounded-2xl shadow-card hover:shadow-card-hover transition-shadow">
+              <Card
+                className="h-full rounded-2xl neon-card transition-all duration-300 border-0"
+                style={{ background: "oklch(0.13 0.03 215)" }}
+              >
                 <CardHeader>
-                  <div className="bg-primary/10 rounded-xl w-14 h-14 flex items-center justify-center mb-2">
+                  <div
+                    className="rounded-xl w-14 h-14 flex items-center justify-center mb-2"
+                    style={{ background: "oklch(0.82 0.18 195 / 0.12)" }}
+                  >
                     {card.icon}
                   </div>
-                  <CardTitle className="text-lg">{card.title}</CardTitle>
+                  <CardTitle className="text-lg font-display text-foreground">
+                    {card.title}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground leading-relaxed">
@@ -748,15 +882,21 @@ function About() {
             </motion.div>
           ))}
         </div>
-        <div className="mt-8 p-4 bg-destructive/10 border border-destructive/20 rounded-xl flex gap-3">
+        <div
+          className="mt-8 p-4 rounded-xl flex gap-3"
+          style={{
+            background: "oklch(0.65 0.22 25 / 0.08)",
+            border: "1px solid oklch(0.65 0.22 25 / 0.3)",
+          }}
+        >
           <AlertTriangle className="w-5 h-5 text-destructive shrink-0 mt-0.5" />
-          <p className="text-sm text-foreground">
-            <strong>Medical Disclaimer:</strong> This project is created solely
-            for educational purposes as part of a school science fair. The
-            predictions generated are based on simplified symptom-mapping
-            algorithms and do <em>not</em> constitute medical advice, diagnosis,
-            or treatment. Always consult a qualified healthcare professional for
-            any health concerns.
+          <p className="text-sm text-foreground/80">
+            <strong className="text-destructive">Medical Disclaimer:</strong>{" "}
+            This project is created solely for educational purposes as part of a
+            school science fair. The predictions generated are based on
+            simplified symptom-mapping algorithms and do <em>not</em> constitute
+            medical advice, diagnosis, or treatment. Always consult a qualified
+            healthcare professional for any health concerns.
           </p>
         </div>
       </div>
@@ -770,7 +910,7 @@ function HowItWorks() {
     {
       icon: <Stethoscope className="w-6 h-6" />,
       title: "Enter Symptoms",
-      desc: "Select symptoms you are experiencing from our comprehensive checklist of 15 common indicators.",
+      desc: "Select symptoms you are experiencing from our comprehensive checklist of 39 common indicators.",
     },
     {
       icon: <Database className="w-6 h-6" />,
@@ -798,15 +938,17 @@ function HowItWorks() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-14">
           <span className="section-label mb-2 block">Process Flow</span>
-          <h2 className="text-3xl font-bold">How the AI System Works</h2>
+          <h2 className="font-display text-3xl font-bold gradient-heading">
+            How the AI System Works
+          </h2>
           <p className="mt-3 text-muted-foreground max-w-xl mx-auto text-sm">
             A transparent look at each stage of the prediction pipeline, from
             symptom input to actionable health guidance.
           </p>
         </div>
         <div className="relative">
-          {/* connecting line desktop */}
-          <div className="hidden lg:block absolute top-10 left-[10%] right-[10%] h-0.5 bg-border" />
+          {/* Neon connecting line desktop */}
+          <div className="hidden lg:block absolute top-10 left-[10%] right-[10%] h-px neon-line" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
             {steps.map((step, i) => (
               <motion.div
@@ -817,13 +959,30 @@ function HowItWorks() {
                 transition={{ duration: 0.4, delay: i * 0.1 }}
                 className="flex flex-col items-center text-center"
               >
-                <div className="relative z-10 w-20 h-20 rounded-full bg-white border-2 border-primary/30 flex flex-col items-center justify-center shadow-card mb-4">
-                  <div className="text-primary">{step.icon}</div>
-                  <span className="text-[10px] font-bold text-primary mt-0.5">
+                <div
+                  className="relative z-10 w-20 h-20 rounded-full flex flex-col items-center justify-center mb-4"
+                  style={{
+                    background: "oklch(0.11 0.03 215)",
+                    border: "2px solid oklch(0.82 0.18 195 / 0.4)",
+                    boxShadow:
+                      "0 0 20px oklch(0.82 0.18 195 / 0.2), inset 0 0 20px oklch(0.82 0.18 195 / 0.05)",
+                  }}
+                >
+                  <div
+                    className="text-primary"
+                    style={{
+                      filter: "drop-shadow(0 0 6px oklch(0.82 0.18 195 / 0.8))",
+                    }}
+                  >
+                    {step.icon}
+                  </div>
+                  <span className="text-[10px] font-bold font-mono text-primary mt-0.5">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                 </div>
-                <h3 className="font-semibold text-sm mb-1.5">{step.title}</h3>
+                <h3 className="font-display font-semibold text-sm mb-1.5 text-foreground">
+                  {step.title}
+                </h3>
                 <p className="text-xs text-muted-foreground leading-relaxed">
                   {step.desc}
                 </p>
@@ -868,11 +1027,17 @@ function SymptomChecker() {
   }
 
   return (
-    <section id="checker" className="py-20 bg-white">
+    <section
+      id="checker"
+      className="py-20"
+      style={{ background: "oklch(0.11 0.025 218)" }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-12">
           <span className="section-label mb-2 block">Interactive Demo</span>
-          <h2 className="text-3xl font-bold">Symptom Checker</h2>
+          <h2 className="font-display text-3xl font-bold gradient-heading">
+            Symptom Checker
+          </h2>
           <p className="mt-3 text-muted-foreground text-sm max-w-xl mx-auto">
             Select your symptoms below to see the AI prediction results. For
             educational purposes only.
@@ -880,43 +1045,63 @@ function SymptomChecker() {
         </div>
         <div className="grid lg:grid-cols-2 gap-6">
           {/* Input Card */}
-          <Card className="rounded-2xl shadow-card" data-ocid="checker.card">
+          <Card
+            className="rounded-2xl neon-card border-0"
+            style={{ background: "oklch(0.13 0.03 215)" }}
+            data-ocid="checker.card"
+          >
             <CardHeader className="pb-4">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Stethoscope className="w-5 h-5 text-primary" />
+              <CardTitle className="text-lg font-display flex items-center gap-2 text-foreground">
+                <Stethoscope
+                  className="w-5 h-5 text-primary"
+                  style={{
+                    filter: "drop-shadow(0 0 6px oklch(0.82 0.18 195 / 0.7))",
+                  }}
+                />
                 Select Symptoms
               </CardTitle>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-primary font-mono">
                 {selected.length} symptom(s) selected
               </p>
             </CardHeader>
             <CardContent className="space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                 {ALL_SYMPTOMS.map((s) => (
-                  <div key={s} className="flex items-center gap-2.5">
+                  <div key={s} className="flex items-center gap-2.5 group">
                     <Checkbox
                       id={`sym-${s}`}
                       checked={selected.includes(s)}
                       onCheckedChange={() => toggleSymptom(s)}
+                      className="border-primary/40 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                      style={
+                        selected.includes(s)
+                          ? { boxShadow: "0 0 8px oklch(0.82 0.18 195 / 0.5)" }
+                          : {}
+                      }
                       data-ocid={"checker.checkbox"}
                     />
                     <Label
                       htmlFor={`sym-${s}`}
-                      className="text-sm cursor-pointer"
+                      className={`text-sm cursor-pointer transition-colors ${selected.includes(s) ? "text-primary" : "text-muted-foreground group-hover:text-foreground"}`}
                     >
                       {s}
                     </Label>
                   </div>
                 ))}
               </div>
-              <div className="grid grid-cols-2 gap-3 pt-2 border-t border-border">
+              <div className="grid grid-cols-2 gap-3 pt-2 border-t border-primary/15">
                 <div>
-                  <Label className="text-xs mb-1.5 block">Age Range</Label>
+                  <Label className="text-xs mb-1.5 block text-muted-foreground">
+                    Age Range
+                  </Label>
                   <Select onValueChange={setAge} value={age}>
-                    <SelectTrigger data-ocid="checker.select">
+                    <SelectTrigger
+                      className="border-primary/25 bg-muted/50 focus:border-primary focus:ring-primary/30"
+                      data-ocid="checker.select"
+                    >
                       <SelectValue placeholder="Select age" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-card border-primary/25">
                       {[
                         "Under 18",
                         "18-30",
@@ -933,12 +1118,17 @@ function SymptomChecker() {
                   </Select>
                 </div>
                 <div>
-                  <Label className="text-xs mb-1.5 block">Gender</Label>
+                  <Label className="text-xs mb-1.5 block text-muted-foreground">
+                    Gender
+                  </Label>
                   <Select onValueChange={setGender} value={gender}>
-                    <SelectTrigger data-ocid="checker.select">
+                    <SelectTrigger
+                      className="border-primary/25 bg-muted/50 focus:border-primary focus:ring-primary/30"
+                      data-ocid="checker.select"
+                    >
                       <SelectValue placeholder="Select gender" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-card border-primary/25">
                       <SelectItem value="male">Male</SelectItem>
                       <SelectItem value="female">Female</SelectItem>
                       <SelectItem value="other">
@@ -950,7 +1140,7 @@ function SymptomChecker() {
               </div>
               <div className="flex gap-3 pt-1">
                 <Button
-                  className="flex-1"
+                  className="flex-1 font-display font-semibold animate-pulse-glow"
                   onClick={analyze}
                   disabled={selected.length === 0}
                   data-ocid="checker.submit_button"
@@ -962,6 +1152,7 @@ function SymptomChecker() {
                   <Button
                     variant="outline"
                     onClick={reset}
+                    className="border-primary/30 text-primary hover:bg-primary/10"
                     data-ocid="checker.secondary_button"
                   >
                     Reset
@@ -973,13 +1164,21 @@ function SymptomChecker() {
 
           {/* Results Card */}
           <Card
-            className="rounded-2xl shadow-card"
+            className="rounded-2xl neon-card-purple border-0"
+            style={{ background: "oklch(0.13 0.03 215)" }}
             data-ocid="checker.results_panel"
           >
             <CardHeader className="pb-4">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Activity className="w-5 h-5 text-primary" />
-                Prediction Results
+              <CardTitle className="text-lg font-display flex items-center gap-2 text-foreground">
+                <Activity
+                  className="w-5 h-5 text-secondary"
+                  style={{
+                    filter: "drop-shadow(0 0 6px oklch(0.72 0.22 290 / 0.7))",
+                  }}
+                />
+                <span style={{ color: "oklch(0.82 0.18 195)" }}>
+                  Prediction Results
+                </span>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -993,10 +1192,24 @@ function SymptomChecker() {
                     className="flex flex-col items-center justify-center py-16 text-center"
                     data-ocid="checker.empty_state"
                   >
-                    <div className="bg-primary/10 rounded-full p-6 mb-4">
-                      <Brain className="w-10 h-10 text-primary" />
+                    <div
+                      className="rounded-full p-6 mb-4"
+                      style={{
+                        background: "oklch(0.82 0.18 195 / 0.1)",
+                        boxShadow: "0 0 30px oklch(0.82 0.18 195 / 0.1)",
+                      }}
+                    >
+                      <Brain
+                        className="w-10 h-10 text-primary"
+                        style={{
+                          filter:
+                            "drop-shadow(0 0 8px oklch(0.82 0.18 195 / 0.6))",
+                        }}
+                      />
                     </div>
-                    <p className="font-medium">No Analysis Yet</p>
+                    <p className="font-display font-medium text-foreground">
+                      No Analysis Yet
+                    </p>
                     <p className="text-sm text-muted-foreground mt-1">
                       Select symptoms and click &quot;Analyze Symptoms&quot; to
                       see predictions.
@@ -1013,7 +1226,9 @@ function SymptomChecker() {
                     data-ocid="checker.empty_state"
                   >
                     <Info className="w-10 h-10 text-muted-foreground mb-3" />
-                    <p className="font-medium">No Strong Matches Found</p>
+                    <p className="font-display font-medium">
+                      No Strong Matches Found
+                    </p>
                     <p className="text-sm text-muted-foreground mt-1">
                       Try selecting more symptoms for better accuracy.
                     </p>
@@ -1028,12 +1243,20 @@ function SymptomChecker() {
                     className="space-y-4"
                     data-ocid="checker.success_state"
                   >
-                    <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg flex gap-2 text-xs">
+                    <div
+                      className="p-3 rounded-lg flex gap-2 text-xs"
+                      style={{
+                        background: "oklch(0.65 0.22 25 / 0.08)",
+                        border: "1px solid oklch(0.65 0.22 25 / 0.3)",
+                      }}
+                    >
                       <AlertTriangle className="w-4 h-4 text-destructive shrink-0" />
-                      <span>
+                      <span className="text-foreground/80">
                         These results are for{" "}
-                        <strong>educational purposes only</strong>. Please
-                        consult a doctor for actual diagnosis.
+                        <strong className="text-destructive">
+                          educational purposes only
+                        </strong>
+                        . Please consult a doctor for actual diagnosis.
                       </span>
                     </div>
                     {results.map((pred, idx) => (
@@ -1060,65 +1283,93 @@ function PredictionCard({ pred, rank }: { pred: Prediction; rank: number }) {
       initial={{ opacity: 0, x: 12 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: rank * 0.1 }}
-      className="border border-border rounded-xl overflow-hidden"
+      className="rounded-xl overflow-hidden"
+      style={{
+        background: "oklch(0.11 0.03 218)",
+        border: "1px solid oklch(0.82 0.18 195 / 0.2)",
+      }}
       data-ocid={`checker.item.${rank}`}
     >
-      <div className="bg-secondary/60 px-4 py-3 flex items-center justify-between gap-3">
+      <div
+        className="px-4 py-3 flex items-center justify-between gap-3"
+        style={{ background: "oklch(0.15 0.04 215)" }}
+      >
         <div className="flex items-center gap-2">
-          <span className="text-xs font-bold text-muted-foreground">
+          <span className="text-xs font-bold font-mono text-primary">
             #{rank}
           </span>
-          <span className="font-semibold text-sm">{pred.disease.name}</span>
+          <span className="font-display font-semibold text-sm text-foreground">
+            {pred.disease.name}
+          </span>
         </div>
         <div className="flex items-center gap-2">
           <span
-            className={`text-[11px] font-bold px-2 py-0.5 rounded ${riskClass(pred.disease.risk)}`}
+            className={`text-[11px] font-bold font-mono px-2 py-0.5 rounded ${riskClass(pred.disease.risk)}`}
           >
             {pred.disease.risk} Risk
           </span>
           <Badge
-            variant={
-              riskColor(pred.disease.risk) as
-                | "destructive"
-                | "default"
-                | "secondary"
-            }
-            className="text-xs"
+            className="text-xs font-mono"
+            style={{
+              background: "oklch(0.82 0.18 195 / 0.15)",
+              color: "oklch(0.82 0.18 195)",
+              border: "1px solid oklch(0.82 0.18 195 / 0.35)",
+              boxShadow: "0 0 8px oklch(0.82 0.18 195 / 0.2)",
+            }}
           >
             {pred.confidence}% match
           </Badge>
         </div>
       </div>
       <div className="px-4 py-1">
-        <Progress value={pred.confidence} className="h-1.5 my-2" />
+        <div
+          className="h-1.5 my-2 rounded-full overflow-hidden"
+          style={{ background: "oklch(0.82 0.18 195 / 0.1)" }}
+        >
+          <motion.div
+            className="h-full rounded-full"
+            style={{
+              width: `${pred.confidence}%`,
+              background:
+                "linear-gradient(90deg, oklch(0.82 0.18 195), oklch(0.72 0.22 290))",
+              boxShadow: "0 0 8px oklch(0.82 0.18 195 / 0.5)",
+            }}
+            initial={{ width: 0 }}
+            animate={{ width: `${pred.confidence}%` }}
+            transition={{ duration: 0.8, delay: rank * 0.15 }}
+          />
+        </div>
       </div>
       <div className="px-4 pb-4">
         <Tabs defaultValue="overview">
-          <TabsList className="h-8 text-xs w-full">
+          <TabsList
+            className="h-8 text-xs w-full"
+            style={{ background: "oklch(0.11 0.03 218)" }}
+          >
             <TabsTrigger
               value="overview"
-              className="flex-1 text-xs"
+              className="flex-1 text-xs data-[state=active]:text-primary"
               data-ocid={"checker.tab"}
             >
               Overview
             </TabsTrigger>
             <TabsTrigger
               value="diet"
-              className="flex-1 text-xs"
+              className="flex-1 text-xs data-[state=active]:text-primary"
               data-ocid={"checker.tab"}
             >
               Diet
             </TabsTrigger>
             <TabsTrigger
               value="medicines"
-              className="flex-1 text-xs"
+              className="flex-1 text-xs data-[state=active]:text-primary"
               data-ocid={"checker.tab"}
             >
               Medicines
             </TabsTrigger>
             <TabsTrigger
               value="prevention"
-              className="flex-1 text-xs"
+              className="flex-1 text-xs data-[state=active]:text-primary"
               data-ocid={"checker.tab"}
             >
               Prevention
@@ -1133,8 +1384,14 @@ function PredictionCard({ pred, rank }: { pred: Prediction; rank: number }) {
             <ul className="space-y-1">
               {pred.disease.diet.map((d) => (
                 <li key={d} className="flex items-start gap-2 text-xs">
-                  <Leaf className="w-3.5 h-3.5 text-green-600 shrink-0 mt-0.5" />
-                  {d}
+                  <Leaf
+                    className="w-3.5 h-3.5 shrink-0 mt-0.5"
+                    style={{
+                      color: "oklch(0.75 0.18 155)",
+                      filter: "drop-shadow(0 0 4px oklch(0.75 0.18 155 / 0.5))",
+                    }}
+                  />
+                  <span className="text-muted-foreground">{d}</span>
                 </li>
               ))}
             </ul>
@@ -1143,12 +1400,20 @@ function PredictionCard({ pred, rank }: { pred: Prediction; rank: number }) {
             <ul className="space-y-1">
               {pred.disease.medicines.map((m) => (
                 <li key={m} className="flex items-start gap-2 text-xs">
-                  <Pill className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
-                  {m}
+                  <Pill
+                    className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5"
+                    style={{
+                      filter: "drop-shadow(0 0 4px oklch(0.82 0.18 195 / 0.5))",
+                    }}
+                  />
+                  <span className="text-muted-foreground">{m}</span>
                 </li>
               ))}
             </ul>
-            <p className="mt-2 text-[11px] text-destructive">
+            <p
+              className="mt-2 text-[11px] font-mono"
+              style={{ color: "oklch(0.82 0.16 25)" }}
+            >
               ⚠ Never self-medicate. All treatments must be prescribed by a
               licensed physician.
             </p>
@@ -1157,8 +1422,13 @@ function PredictionCard({ pred, rank }: { pred: Prediction; rank: number }) {
             <ul className="space-y-1">
               {pred.disease.prevention.map((p) => (
                 <li key={p} className="flex items-start gap-2 text-xs">
-                  <ShieldCheck className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
-                  {p}
+                  <ShieldCheck
+                    className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5"
+                    style={{
+                      filter: "drop-shadow(0 0 4px oklch(0.82 0.18 195 / 0.5))",
+                    }}
+                  />
+                  <span className="text-muted-foreground">{p}</span>
                 </li>
               ))}
             </ul>
@@ -1173,9 +1443,15 @@ function PredictionCard({ pred, rank }: { pred: Prediction; rank: number }) {
 function SafetyMeasures() {
   const cards = [
     {
-      icon: <Microscope className="w-8 h-8 text-primary" />,
+      icon: (
+        <Microscope
+          className="w-8 h-8 text-primary"
+          style={{ filter: "drop-shadow(0 0 8px oklch(0.82 0.18 195 / 0.7))" }}
+        />
+      ),
       title: "Cancer Awareness",
       subtitle: "Early Detection Saves Lives",
+      accent: "primary" as const,
       tips: [
         "Schedule annual cancer screenings appropriate for your age and gender",
         "Perform monthly self-examinations for breast and skin changes",
@@ -1188,9 +1464,18 @@ function SafetyMeasures() {
       ],
     },
     {
-      icon: <HeartPulse className="w-8 h-8 text-primary" />,
+      icon: (
+        <HeartPulse
+          className="w-8 h-8"
+          style={{
+            color: "oklch(0.72 0.22 290)",
+            filter: "drop-shadow(0 0 8px oklch(0.72 0.22 290 / 0.7))",
+          }}
+        />
+      ),
       title: "Heart Health",
       subtitle: "Protect Your Most Vital Organ",
+      accent: "secondary" as const,
       tips: [
         "Monitor blood pressure regularly — aim for <130/80 mmHg",
         "Keep LDL cholesterol below 100 mg/dL",
@@ -1208,7 +1493,7 @@ function SafetyMeasures() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-12">
           <span className="section-label mb-2 block">Prevention First</span>
-          <h2 className="text-3xl font-bold">
+          <h2 className="font-display text-3xl font-bold gradient-heading">
             Disease Safety &amp; Prevention
           </h2>
           <p className="mt-3 text-muted-foreground text-sm max-w-xl mx-auto">
@@ -1225,13 +1510,38 @@ function SafetyMeasures() {
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              <Card className="h-full rounded-2xl shadow-card hover:shadow-card-hover transition-shadow">
+              <Card
+                className={`h-full rounded-2xl transition-all duration-300 border-0 ${
+                  c.accent === "primary" ? "neon-card" : "neon-card-purple"
+                }`}
+                style={{ background: "oklch(0.13 0.03 215)" }}
+              >
                 <CardHeader>
                   <div className="flex items-center gap-4">
-                    <div className="bg-primary/10 rounded-xl p-3">{c.icon}</div>
+                    <div
+                      className="rounded-xl p-3"
+                      style={{
+                        background:
+                          c.accent === "primary"
+                            ? "oklch(0.82 0.18 195 / 0.12)"
+                            : "oklch(0.72 0.22 290 / 0.12)",
+                      }}
+                    >
+                      {c.icon}
+                    </div>
                     <div>
-                      <CardTitle>{c.title}</CardTitle>
-                      <p className="text-xs text-muted-foreground mt-0.5">
+                      <CardTitle className="font-display text-foreground">
+                        {c.title}
+                      </CardTitle>
+                      <p
+                        className="text-xs mt-0.5 font-mono"
+                        style={{
+                          color:
+                            c.accent === "primary"
+                              ? "oklch(0.82 0.18 195 / 0.7)"
+                              : "oklch(0.72 0.22 290 / 0.8)",
+                        }}
+                      >
                         {c.subtitle}
                       </p>
                     </div>
@@ -1241,7 +1551,19 @@ function SafetyMeasures() {
                   <ul className="space-y-2.5">
                     {c.tips.map((t) => (
                       <li key={t} className="flex items-start gap-2.5 text-sm">
-                        <ShieldCheck className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                        <ShieldCheck
+                          className="w-4 h-4 shrink-0 mt-0.5"
+                          style={{
+                            color:
+                              c.accent === "primary"
+                                ? "oklch(0.82 0.18 195)"
+                                : "oklch(0.72 0.22 290)",
+                            filter:
+                              c.accent === "primary"
+                                ? "drop-shadow(0 0 4px oklch(0.82 0.18 195 / 0.4))"
+                                : "drop-shadow(0 0 4px oklch(0.72 0.22 290 / 0.4))",
+                          }}
+                        />
                         <span className="text-muted-foreground">{t}</span>
                       </li>
                     ))}
@@ -1260,27 +1582,46 @@ function SafetyMeasures() {
 function AiTechnology() {
   const techs = [
     {
-      icon: <FlaskConical className="w-8 h-8 text-primary" />,
+      icon: (
+        <FlaskConical
+          className="w-8 h-8 text-primary"
+          style={{ filter: "drop-shadow(0 0 8px oklch(0.82 0.18 195 / 0.7))" }}
+        />
+      ),
       title: "Python & Machine Learning",
       body: "Python is the primary language for this AI model, leveraging libraries like scikit-learn and pandas. Machine learning enables the system to find patterns in medical data that would be impossible to program manually.",
     },
     {
-      icon: <GitBranch className="w-8 h-8 text-primary" />,
+      icon: (
+        <GitBranch
+          className="w-8 h-8 text-primary"
+          style={{ filter: "drop-shadow(0 0 8px oklch(0.82 0.18 195 / 0.7))" }}
+        />
+      ),
       title: "Decision Tree Algorithm",
       body: "A Decision Tree is a flowchart-like structure where each node represents a symptom question, branches represent yes/no answers, and leaf nodes represent disease predictions. It's interpretable and clinically relevant.",
     },
     {
-      icon: <Database className="w-8 h-8 text-primary" />,
+      icon: (
+        <Database
+          className="w-8 h-8 text-primary"
+          style={{ filter: "drop-shadow(0 0 8px oklch(0.82 0.18 195 / 0.7))" }}
+        />
+      ),
       title: "Dataset Training",
       body: "The model is trained on symptom-disease datasets from medical literature. Each disease has a symptom profile. During prediction, Bayesian-inspired scoring computes the probability of each disease given the observed symptoms.",
     },
   ];
   return (
-    <section id="technology" className="py-20 bg-white">
+    <section
+      id="technology"
+      className="py-20"
+      style={{ background: "oklch(0.11 0.025 218)" }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-12">
           <span className="section-label mb-2 block">Under the Hood</span>
-          <h2 className="text-3xl font-bold">
+          <h2 className="font-display text-3xl font-bold gradient-heading">
             Understanding the AI Technology
           </h2>
           <p className="mt-3 text-muted-foreground text-sm max-w-xl mx-auto">
@@ -1297,12 +1638,20 @@ function AiTechnology() {
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.1 }}
             >
-              <Card className="h-full rounded-2xl shadow-card text-center">
+              <Card
+                className="h-full rounded-2xl neon-card border-0 text-center transition-all duration-300"
+                style={{ background: "oklch(0.13 0.03 215)" }}
+              >
                 <CardHeader>
-                  <div className="mx-auto bg-primary/10 rounded-2xl p-4 w-16 h-16 flex items-center justify-center mb-2">
+                  <div
+                    className="mx-auto rounded-2xl p-4 w-16 h-16 flex items-center justify-center mb-2"
+                    style={{ background: "oklch(0.82 0.18 195 / 0.12)" }}
+                  >
                     {t.icon}
                   </div>
-                  <CardTitle className="text-lg">{t.title}</CardTitle>
+                  <CardTitle className="text-lg font-display text-foreground">
+                    {t.title}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground leading-relaxed">
@@ -1325,81 +1674,77 @@ function Contact() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-12">
           <span className="section-label mb-2 block">The Team</span>
-          <h2 className="text-3xl font-bold">Contact &amp; Credits</h2>
+          <h2 className="font-display text-3xl font-bold gradient-heading">
+            Contact &amp; Credits
+          </h2>
         </div>
         <div className="grid md:grid-cols-2 gap-6">
-          <Card className="rounded-2xl shadow-card">
+          <Card
+            className="rounded-2xl neon-card border-0"
+            style={{ background: "oklch(0.13 0.03 215)" }}
+          >
             <CardHeader>
-              <CardTitle className="text-lg">Project Creator</CardTitle>
+              <CardTitle className="text-lg font-display text-foreground">
+                Project Creator
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground">
-              <div>
-                <span className="font-semibold text-foreground">
-                  Student Name:
-                </span>{" "}
-                [Your Name Here]
-              </div>
-              <div>
-                <span className="font-semibold text-foreground">School:</span>{" "}
-                [Your School Name]
-              </div>
-              <div>
-                <span className="font-semibold text-foreground">
-                  Grade / Class:
-                </span>{" "}
-                [Grade Level]
-              </div>
-              <div>
-                <span className="font-semibold text-foreground">
-                  Science Fair Year:
-                </span>{" "}
-                2026
-              </div>
-              <div>
-                <span className="font-semibold text-foreground">
-                  Project Category:
-                </span>{" "}
-                Computer Science / Artificial Intelligence
-              </div>
-              <div>
-                <span className="font-semibold text-foreground">
-                  Mentor / Teacher:
-                </span>{" "}
-                [Teacher Name]
-              </div>
+              {[
+                ["Student Name", "M. Deekhith Kumar"],
+                ["School", "[Your School Name]"],
+                ["Grade / Class", "10E"],
+                ["Science Fair Year", "2026"],
+                ["Project Category", "AI with Biology"],
+                ["Mentor / Teacher", "[Teacher Name]"],
+              ].map(([label, value]) => (
+                <div key={label} className="flex gap-2">
+                  <span className="font-semibold text-primary font-mono text-xs uppercase tracking-wider whitespace-nowrap">
+                    {label}:
+                  </span>
+                  <span>{value}</span>
+                </div>
+              ))}
             </CardContent>
           </Card>
-          <Card className="rounded-2xl shadow-card">
+          <Card
+            className="rounded-2xl neon-card-purple border-0"
+            style={{ background: "oklch(0.13 0.03 215)" }}
+          >
             <CardHeader>
-              <CardTitle className="text-lg">
+              <CardTitle className="text-lg font-display text-foreground">
                 Project References &amp; Credits
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 text-sm text-muted-foreground">
-              <p className="flex items-start gap-2">
-                <ShieldCheck className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                World Health Organization (WHO) — Disease Statistics
-              </p>
-              <p className="flex items-start gap-2">
-                <ShieldCheck className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                National Cancer Institute — Cancer Symptom Data
-              </p>
-              <p className="flex items-start gap-2">
-                <ShieldCheck className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                American Heart Association — Cardiovascular Risk Factors
-              </p>
-              <p className="flex items-start gap-2">
-                <ShieldCheck className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                scikit-learn Python Library — ML Algorithms
-              </p>
-              <p className="flex items-start gap-2">
-                <ShieldCheck className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                PubMed Medical Literature Database
-              </p>
-              <div className="mt-4 p-3 bg-primary/10 rounded-xl text-xs">
-                <strong>Note:</strong> This project is created for educational
-                purposes only and demonstrates the potential of AI in
-                healthcare. It does not replace professional medical advice.
+              {[
+                "World Health Organization (WHO) — Disease Statistics",
+                "National Cancer Institute — Cancer Symptom Data",
+                "American Heart Association — Cardiovascular Risk Factors",
+                "scikit-learn Python Library — ML Algorithms",
+                "PubMed Medical Literature Database",
+              ].map((ref) => (
+                <p key={ref} className="flex items-start gap-2">
+                  <ShieldCheck
+                    className="w-4 h-4 shrink-0 mt-0.5"
+                    style={{
+                      color: "oklch(0.72 0.22 290)",
+                      filter: "drop-shadow(0 0 4px oklch(0.72 0.22 290 / 0.4))",
+                    }}
+                  />
+                  {ref}
+                </p>
+              ))}
+              <div
+                className="mt-4 p-3 rounded-xl text-xs"
+                style={{
+                  background: "oklch(0.82 0.18 195 / 0.08)",
+                  border: "1px solid oklch(0.82 0.18 195 / 0.2)",
+                }}
+              >
+                <strong className="text-primary">Note:</strong> This project is
+                created for educational purposes only and demonstrates the
+                potential of AI in healthcare. It does not replace professional
+                medical advice.
               </div>
             </CardContent>
           </Card>
@@ -1413,11 +1758,25 @@ function Contact() {
 function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="bg-white border-t border-border py-10">
+    <footer
+      className="border-t py-10"
+      style={{
+        background: "oklch(0.08 0.025 220)",
+        borderColor: "oklch(0.82 0.18 195 / 0.15)",
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
         <div>
-          <div className="flex items-center gap-2 font-bold text-primary mb-1">
-            <ShieldPlus className="w-5 h-5" />
+          <div
+            className="flex items-center gap-2 font-display font-bold text-primary mb-1"
+            style={{ textShadow: "0 0 15px oklch(0.82 0.18 195 / 0.4)" }}
+          >
+            <ShieldPlus
+              className="w-5 h-5"
+              style={{
+                filter: "drop-shadow(0 0 6px oklch(0.82 0.18 195 / 0.7))",
+              }}
+            />
             AI Disease Prediction System
           </div>
           <p className="text-xs text-muted-foreground max-w-xs">
@@ -1426,24 +1785,21 @@ function Footer() {
           </p>
         </div>
         <div className="flex flex-wrap gap-x-5 gap-y-2 text-xs text-muted-foreground">
-          <a href="#about" className="hover:text-primary transition-colors">
-            About
-          </a>
-          <a
-            href="#how-it-works"
-            className="hover:text-primary transition-colors"
-          >
-            How It Works
-          </a>
-          <a href="#checker" className="hover:text-primary transition-colors">
-            Symptom Checker
-          </a>
-          <a href="#safety" className="hover:text-primary transition-colors">
-            Disease Insights
-          </a>
-          <a href="#contact" className="hover:text-primary transition-colors">
-            Disclaimer
-          </a>
+          {[
+            ["#about", "About"],
+            ["#how-it-works", "How It Works"],
+            ["#checker", "Symptom Checker"],
+            ["#safety", "Disease Insights"],
+            ["#contact", "Disclaimer"],
+          ].map(([href, label]) => (
+            <a
+              key={href}
+              href={href}
+              className="hover:text-primary transition-colors duration-200"
+            >
+              {label}
+            </a>
+          ))}
         </div>
         <p className="text-xs text-muted-foreground text-center md:text-right">
           © {year}. Built with ❤️ using{" "}
@@ -1451,7 +1807,7 @@ function Footer() {
             href={`https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(typeof window !== "undefined" ? window.location.hostname : "")}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-primary underline"
+            className="hover:text-primary underline transition-colors"
           >
             caffeine.ai
           </a>

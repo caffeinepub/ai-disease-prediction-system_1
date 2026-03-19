@@ -16,7 +16,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
+        display: ['"Bricolage Grotesque"', 'system-ui', 'sans-serif'],
+        sans: ['"Satoshi"', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "oklch(var(--border))",
@@ -24,7 +25,6 @@ export default {
         ring: "oklch(var(--ring) / <alpha-value>)",
         background: "oklch(var(--background))",
         foreground: "oklch(var(--foreground))",
-        navy: "oklch(var(--navy))",
         primary: {
           DEFAULT: "oklch(var(--primary) / <alpha-value>)",
           foreground: "oklch(var(--primary-foreground))",
@@ -79,9 +79,15 @@ export default {
         "2xl": "1.25rem",
       },
       boxShadow: {
-        xs: "0 1px 2px 0 rgba(0,0,0,0.05)",
-        card: "0 2px 16px 0 rgba(15,23,42,0.06), 0 1px 4px 0 rgba(15,23,42,0.04)",
-        "card-hover": "0 8px 32px 0 rgba(47,102,198,0.12), 0 2px 8px 0 rgba(15,23,42,0.06)",
+        xs: "0 1px 2px 0 rgba(0,0,0,0.15)",
+        card: "0 2px 16px 0 oklch(0 0 0 / 0.4), 0 1px 4px 0 oklch(0 0 0 / 0.3)",
+        "card-hover":
+          "0 0 0 1px oklch(0.82 0.18 195 / 0.3), 0 8px 32px oklch(0.82 0.18 195 / 0.15)",
+        "neon-sm": "0 0 10px oklch(0.82 0.18 195 / 0.4), 0 0 20px oklch(0.82 0.18 195 / 0.15)",
+        "neon-md": "0 0 20px oklch(0.82 0.18 195 / 0.5), 0 0 40px oklch(0.82 0.18 195 / 0.2)",
+        "neon-lg": "0 0 30px oklch(0.82 0.18 195 / 0.6), 0 0 80px oklch(0.82 0.18 195 / 0.25)",
+        "neon-purple": "0 0 20px oklch(0.72 0.22 290 / 0.5), 0 0 40px oklch(0.72 0.22 290 / 0.2)",
+        "neon-red": "0 0 15px oklch(0.65 0.22 25 / 0.5), 0 0 30px oklch(0.65 0.22 25 / 0.2)",
       },
       keyframes: {
         "accordion-down": {
@@ -100,12 +106,17 @@ export default {
           from: { opacity: "0", transform: "translateY(20px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
+        "glow-pulse": {
+          "0%, 100%": { boxShadow: "0 0 10px oklch(0.82 0.18 195 / 0.4)" },
+          "50%": { boxShadow: "0 0 30px oklch(0.82 0.18 195 / 0.7), 0 0 60px oklch(0.82 0.18 195 / 0.3)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "fill-bar": "fill-bar 1s ease-out forwards",
         "fade-up": "fade-up 0.5s ease-out",
+        "glow-pulse": "glow-pulse 2.5s ease-in-out infinite",
       },
     },
   },
